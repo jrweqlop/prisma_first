@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model member{
+    Member_ID               Int         @id @default(autoincrement())
+    Member_Student_ID       String      @db.VarChar(10)
+    Member_Name             String      @db.VarChar(15)
+    Member_Add              String      @db.VarChar(30)
+    Member_Phone            String      @db.VarChar(10)
+    Member_Issue            DateTime
+    Member_Expiry           DateTime
+    Member_Category         String      @db.VarChar(10)
+
+    Borrow_book             borrow_book[]
+    Return_book             return_book[]
+}
+
+model librarian{
+    Librarian_ID            Int         @id @default(autoincrement())
+    Librarian_Name          String      @db.VarChar(30)
+    Librarian_Phone         String      @db.VarChar(10)
+    Librarian_Issue         DateTime
+    Librarian_Expiry        DateTime
+
+    Borrow_book             borrow_book[]
+    Return_book             return_book[]
+}
+
+model book{
+    Book_ID            Int         @id @default(autoincrement())
+    Book_Name          String      @db.VarChar(30)
+    Book_Category      String      @db.VarChar(30)
+    Book_Publishing    String      @db.VarChar(30)
+
+    Borrow_detail           borrow_detail[]
+}
+
+model borrow_book{
+    Borrow_ID           Int         @id @default(autoincrement())
+    Member_ID           Int         @unique
+    Librarian_ID        Int         @unique
+    Borrow_Date         DateTime
+    MemberID            member      @relation(fields:[Member_ID],references:[Member_ID])
+    LibrarianID         librarian   @relation(fields:[Librarian_ID],references:[Librarian_ID])
+
+    Borrow_detail           borrow_detail[]
+}
+
+model borrow_detail{
+    BorrowDetail_ID     Int             @id @default(autoincrement())
+    Borrow_ID           Int             @unique
+    Book_ID             Int             @unique
+    BorrowID            borrow_book     @relation(fields:[Borrow_ID],references:[Borrow_ID])
+    BookID              book            @relation(fields:[Book_ID],references:[Book_ID])
+
+    Return_book             return_book[]
+}
+
+model return_book{
+    Return_ID           Int             @id @default(autoincrement())
+    Return_Date         DateTime
+    BorrowDetail_ID     Int             @unique
+    Member_ID           Int             @unique
+    Librarian_ID        Int             @unique
+
+    BorrowDetailID      borrow_detail   @relation(fields:[BorrowDetail_ID],references:[BorrowDetail_ID])
+    MemberID            member          @relation(fields:[Member_ID],references:[Member_ID])
+    LibrarianID         librarian       @relation(fields:[Librarian_ID],references:[Librarian_ID])
+}
+

@@ -53,6 +53,12 @@ export const Insert_Borrow_detail = async (req: Request, res: Response) => {
         Book_ID
     } = req.body;
     console.log(Borrow_ID, Book_ID)
+    if (BorrowDetail_ID === null && Borrow_ID === null && Book_ID === null) {
+        return res.status(400).json({
+            code: 4000,
+            message: 'Bad Request',
+        });
+    }
     try {
         const insertBorrowDetail = await prisma.borrow_detail.create({
             data: {

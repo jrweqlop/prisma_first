@@ -4,7 +4,7 @@ export interface member_type {
     Member_Name?: string;
     Member_Add?: string;
     Member_Phone?: string;
-    Member_Issue?: string;
-    Member_Expiry?: string;
+    Member_Issue?: Date;
+    Member_Expiry?: Date;
     Member_Category?: string;
 }

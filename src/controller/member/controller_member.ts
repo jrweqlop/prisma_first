@@ -21,12 +21,11 @@ export const Get_Member = async (req: Request, res: Response) => {
     }
 }
 
-
 export const Search_Member = async (req: Request, res: Response) => {
     const {Member_ID}: member_type = req.params;
     try {
-        const id:number = parseInt(String(Member_ID))
-        const result = await prisma.member.findFirst({where: {Member_ID:id}})
+        const id: number = parseInt(String(Member_ID))
+        const result = await prisma.member.findFirst({where: {Member_ID: id}})
         if (result === null) {
             return res.status(404).json({
                 code: 4040,
@@ -57,6 +56,12 @@ export const Insert_Member = async (req: Request, res: Response) => {
         Member_Expiry,
         Member_Category
     } = req.body;
+    if (Member_Student_ID === null && Member_Name === null && Member_Add === null && Member_Phone === null && Member_Issue === null && Member_Expiry === null && Member_Category === null) {
+        return res.status(404).json({
+            code: 4040,
+            message: 'Not Found'
+        });
+    }
     try {
         const insert_Member = await prisma.member.create({
             data: {
@@ -92,14 +97,19 @@ export const Edit_Member = async (req: Request, res: Response) => {
         Member_Expiry,
         Member_Category
     } = req.body;
-    console.log(typeof(Member_Student_ID))
-    console.log(typeof(Member_Name))
-    console.log(typeof(Member_Add))
-    console.log(typeof(Member_Phone))
-    console.log(typeof(Member_Issue))
-    console.log(typeof(Member_Expiry))
-    console.log(typeof(Member_Category))
-
+    console.log(typeof (Member_Student_ID))
+    console.log(typeof (Member_Name))
+    console.log(typeof (Member_Add))
+    console.log(typeof (Member_Phone))
+    console.log(typeof (Member_Issue))
+    console.log(typeof (Member_Expiry))
+    console.log(typeof (Member_Category))
+    if (Member_ID === null) {
+        return res.status(400).json({
+            code: 4000,
+            message: 'Bad Request'
+        });
+    }
     try {
         const object_data = {
             Member_Student_ID,
@@ -112,8 +122,8 @@ export const Edit_Member = async (req: Request, res: Response) => {
         }
         const values = formatClearData(object_data);
         console.log(values);
-        const id:number = parseInt(String(Member_ID))
-        const value = await prisma.member.findFirst({where: {Member_ID:id}})
+        const id: number = parseInt(String(Member_ID))
+        const value = await prisma.member.findFirst({where: {Member_ID: id}})
         if (value === null) {
             return res.status(404).json({
                 code: 4040,
@@ -121,7 +131,7 @@ export const Edit_Member = async (req: Request, res: Response) => {
             });
         }
         const result = await prisma.member.update({
-            where: {Member_ID:id},
+            where: {Member_ID: id},
             data: values
         });
         return res.status(200).json({
@@ -139,15 +149,15 @@ export const Edit_Member = async (req: Request, res: Response) => {
 export const Delete_Member = async (req: Request, res: Response) => {
     const {Member_ID}: member_type = req.params;
     try {
-        const id:number = parseInt(String(Member_ID))
-        const value = await prisma.member.findFirst({where: {Member_ID:id}})
+        const id: number = parseInt(String(Member_ID))
+        const value = await prisma.member.findFirst({where: {Member_ID: id}})
         if (value === null) {
             return res.status(404).json({
                 code: 4040,
                 message: 'Not Found'
             });
         } else {
-            const result = await prisma.member.delete({where: {Member_ID:id}})
+            const result = await prisma.member.delete({where: {Member_ID: id}})
             return res.status(200).json({
                 code: 2000,
                 message: 'Delete Success',

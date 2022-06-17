@@ -36,18 +36,19 @@ model librarian{
 }
 
 model book{
-    Book_ID            Int         @id @default(autoincrement())
-    Book_Name          String      @db.VarChar(30)
-    Book_Category      String      @db.VarChar(30)
-    Book_Publishing    String      @db.VarChar(30)
+    Book_ID            Int                  @id @default(autoincrement())
+    Book_Name          String               @db.VarChar(30)
+    Book_Category      String?              @db.VarChar(30)
+    Book_Publishing    String               @db.VarChar(30)
 
-    Borrow_detail           borrow_detail[]
+//    BookCategory        book_category?      @relation(fields:[Book_Category],references:[Book_Category],onDelete: NoAction, onUpdate: NoAction)
+    Borrow_detail       borrow_detail[]
 }
 
 model borrow_book{
-    Borrow_ID           Int         @id @default(autoincrement())
-    Member_ID           Int         @unique
-    Librarian_ID        Int         @unique
+    Borrow_ID           Int        @id @default(autoincrement())
+    Member_ID           Int
+    Librarian_ID        Int
     Borrow_Date         DateTime
     MemberID            member      @relation(fields:[Member_ID],references:[Member_ID])
     LibrarianID         librarian   @relation(fields:[Librarian_ID],references:[Librarian_ID])
@@ -57,8 +58,8 @@ model borrow_book{
 
 model borrow_detail{
     BorrowDetail_ID     Int             @id @default(autoincrement())
-    Borrow_ID           Int             @unique
-    Book_ID             Int             @unique
+    Borrow_ID           Int
+    Book_ID             Int
     BorrowID            borrow_book     @relation(fields:[Borrow_ID],references:[Borrow_ID])
     BookID              book            @relation(fields:[Book_ID],references:[Book_ID])
 
@@ -68,12 +69,18 @@ model borrow_detail{
 model return_book{
     Return_ID           Int             @id @default(autoincrement())
     Return_Date         DateTime
-    BorrowDetail_ID     Int             @unique
-    Member_ID           Int             @unique
-    Librarian_ID        Int             @unique
+    BorrowDetail_ID     Int
+    Member_ID           Int
+    Librarian_ID        Int
 
     BorrowDetailID      borrow_detail   @relation(fields:[BorrowDetail_ID],references:[BorrowDetail_ID])
     MemberID            member          @relation(fields:[Member_ID],references:[Member_ID])
     LibrarianID         librarian       @relation(fields:[Librarian_ID],references:[Librarian_ID])
 }
 
+//model book_category{
+//    ID              Int             @id @default(autoincrement())
+//    Book_Category   String?         @db.VarChar(30) @unique
+
+//    Book            book[]
+//}

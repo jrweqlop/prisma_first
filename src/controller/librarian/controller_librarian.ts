@@ -3,7 +3,6 @@ import {librarian_type} from "../../db/table/table_librarian";
 import formatClearData from "../../utils/helper/format/formatCleanData";
 
 import {PrismaClient} from '@prisma/client'
-import {parse} from "dotenv";
 
 const prisma = new PrismaClient()
 
@@ -29,7 +28,7 @@ export const Search_Librarian = async (req: Request, res: Response) => {
     console.log(typeof (Librarian_ID))
     try {
         const id: number = parseInt(String(Librarian_ID))
-        const result = await prisma.librarian.findMany({where: {Librarian_ID: id}})
+        const result = await prisma.librarian.findFirst({where: {Librarian_ID: id}})
         if (result === null) {
             return res.status(404).json({
                 code: 4040,
@@ -58,6 +57,12 @@ export const Insert_Librarian = async (req: Request, res: Response) => {
         Librarian_Issue,
         Librarian_Expiry
     } = req.body;
+    if (Librarian_Name === null && Librarian_Phone === null && Librarian_Issue === null && Librarian_Expiry === null) {
+        return res.status(400).json({
+            code: 4000,
+            message: 'Bad Request'
+        });
+    }
     try {
         const insertLibrarian = await prisma.librarian.create({
             data: {
@@ -126,8 +131,14 @@ export const Edit_Librarian = async (req: Request, res: Response) => {
 }
 export const Delete_Librarian = async (req: Request, res: Response) => {
     const {Librarian_ID}: librarian_type = req.params;
-    const id: number = parseInt(String(Librarian_ID))
+    // if (Librarian_ID === null) {
+    //     return res.status(400).json({
+    //         code: 4000,
+    //         message: 'Bad Request'
+    //     })
+    // }
     try {
+        const id: number = parseInt(String(Librarian_ID))
         const value = await prisma.librarian.findFirst({
             where: {
                 Librarian_ID: id,

@@ -49,6 +49,12 @@ export const Search_Borrow_book = async (req: Request, res: Response) => {
 
 export const Insert_Borrow_book = async (req: Request, res: Response) => {
     const {Borrow_ID, Member_ID, Librarian_ID, Borrow_Date} = req.body;
+    if (Borrow_ID === null && Member_ID === null && Librarian_ID === null && Borrow_Date === null) {
+        return res.status(400).json({
+            code: 4000,
+            message: 'Bad Request',
+        });
+    }
     try {
         const object_data = {Borrow_ID, Member_ID, Librarian_ID, Borrow_Date}
         const values = formatClearData(object_data);

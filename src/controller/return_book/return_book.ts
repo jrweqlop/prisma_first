@@ -21,6 +21,12 @@ export const Get_Return_book = async (req: Request, res: Response) => {
 
 export const Search_Return_book = async (req: Request, res: Response) => {
     const {BorrowDetail_ID}: return_book_type = req.params;
+    if (BorrowDetail_ID === null) {
+        return res.status(400).json({
+            code: 400,
+            message: 'Bad Request'
+        });
+    }
     try {
         const result = await prisma.return_book.findFirst({where: {BorrowDetail_ID}})
         if (result === null) {
@@ -45,10 +51,16 @@ export const Search_Return_book = async (req: Request, res: Response) => {
 
 export const Insert_Return_book = async (req: Request, res: Response) => {
     const {Return_Date, BorrowDetail_ID, Member_ID, Librarian_ID} = req.body;
-    const values = {Return_Date, BorrowDetail_ID, Member_ID, Librarian_ID}
+    if (Return_Date === null && BorrowDetail_ID == null && Member_ID === null && Librarian_ID === null) {
+        return res.status(400).json({
+            code: 4000,
+            message: 'Bad Request'
+        });
+    }
     try {
+        const values = {Return_Date, BorrowDetail_ID, Member_ID, Librarian_ID}
         const insertReturnBook = await prisma.return_book.create({
-            data:values
+            data: values
         });
         return res.status(201).json({
             code: 2010,

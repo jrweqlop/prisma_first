@@ -53,8 +53,14 @@ export const Insert_Book = async (req: Request, res: Response) => {
         Book_Category,
         Book_Publishing,
     } = req.body;
+    if (Book_Name === null && Book_Category === null && Book_Publishing) {
+        return res.status(400).json({
+            code: 4000,
+            message: 'Bad Request',
+        });
+    }
     try {
-        const insertUser = await prisma.book.create({
+        const insertBook = await prisma.book.create({
             data: {
                 Book_ID,
                 Book_Name,
@@ -101,7 +107,7 @@ export const Edit_Book = async (req: Request, res: Response) => {
             });
         }
         const result = await prisma.book.update({
-            where: {Book_ID:id},
+            where: {Book_ID: id},
             data: values
         });
         return res.status(200).json({
@@ -127,7 +133,7 @@ export const Delete_Book = async (req: Request, res: Response) => {
                 message: 'Not Found'
             });
         } else {
-            const result = await prisma.book.delete({where: {Book_ID:id}})
+            const result = await prisma.book.delete({where: {Book_ID: id}})
             return res.status(200).json({
                 code: 2000,
                 message: 'Delete Success',

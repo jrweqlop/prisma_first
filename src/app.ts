@@ -12,6 +12,7 @@ import book from "./routes/book";
 import borrow_book from "./routes/borrow_book";
 import borrow_detail from "./routes/borrow_detail";
 import return_book from "./routes/return_book";
+import logger from "morgan"
 
 
 require('dotenv').config();
@@ -20,7 +21,7 @@ const app: Application = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
+app.use(logger("dev"))
 app.use(express.json());
 
 app.use(`${base}/api/v1/member`, member)

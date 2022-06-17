@@ -35,7 +35,7 @@ app.use(`${base}/api/v1/return_book`, return_book)
 
 app.get('/', (req: Request, res: Response) => {
     // res.send("SYSTEM LIBRARY");
-    res.sendFile(path.join(__dirname, 'main', 'index.html'));
+    res.send(" Main ");
 });
 
 app.get('/name/:name', (req: Request, res: Response) => {

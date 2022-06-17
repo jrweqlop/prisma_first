@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "tsc": "tsc",
+    "build": "rm -rf build | tsc",
     "dev": "ts-node ./src/app.ts",
-    "start": "node ./dist/src/app.js"
+    "start": "NODE=\"prodctuion\" node dist/app.js"
   },
   "keywords": [],
   "author": "",
